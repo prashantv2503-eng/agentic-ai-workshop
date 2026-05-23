@@ -1,0 +1,254 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>ShopEasy Multi-Agent Data Analyst Dashboard</title>
+    <!-- Google Fonts: Inter & Outfit -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;600;700&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+    <!-- Chart.js from CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  </head>
+  <body>
+    <div class="dashboard-wrapper">
+      
+      <!-- Top Navigation & Control Bar -->
+      <header class="dashboard-header">
+        <div class="header-branding">
+          <div class="logo-glow"></div>
+          <span class="logo-icon">🤖💼</span>
+          <div>
+            <h1>ShopEasy Data Analyst</h1>
+            <p>Autonomous Multi-Agent Diagnostics Environment</p>
+          </div>
+        </div>
+        
+        <div class="header-controls">
+          <div class="sim-clock-wrapper">
+            <span class="pulse-indicator live"></span>
+            <span class="clock-label">Simulation Clock:</span>
+            <span id="sim-time" class="clock-time">12:00:00 PM</span>
+          </div>
+
+          <!-- Scenario Injection Dropdown -->
+          <div class="control-group">
+            <label for="scenario-select">Inject Operational Crisis:</label>
+            <select id="scenario-select" class="theme-select">
+              <option value="none">🟢 Normal Operations (Baseline)</option>
+              <option value="stockout">⚠️ Scenario A: Out of Stock Crisis (PROD-001)</option>
+              <option value="bug">🛑 Scenario B: Checkout Funnel Bug (Mobile UX)</option>
+              <option value="spike">⚡ Scenario C: Campaign Flash Sale Spike</option>
+            </select>
+          </div>
+
+          <button id="reset-db-btn" class="btn btn-secondary">🔄 Reset DB</button>
+        </div>
+      </header>
+
+      <!-- Autonomous Agent Grid -->
+      <section class="agents-status-grid">
+        <!-- Orchestrator -->
+        <div class="agent-card orchestrator" id="card-Orchestrator">
+          <div class="agent-avatar">🕵️‍♂️</div>
+          <div class="agent-meta">
+            <h3>Orchestrator Agent</h3>
+            <span class="role-badge">Lead Analyst</span>
+            <div class="status-indicator">
+              <span class="dot"></span> <span class="status-text">IDLE</span>
+            </div>
+            <p class="current-task">Awaiting instructions...</p>
+          </div>
+        </div>
+
+        <!-- Sales Specialist -->
+        <div class="agent-card specialist" id="card-SalesAgent">
+          <div class="agent-avatar">💵</div>
+          <div class="agent-meta">
+            <h3>Sales & Revenue</h3>
+            <span class="role-badge">Financial Specialist</span>
+            <div class="status-indicator">
+              <span class="dot"></span> <span class="status-text">IDLE</span>
+            </div>
+            <p class="current-task">Monitoring transaction logs...</p>
+          </div>
+        </div>
+
+        <!-- Customer Behavior Specialist -->
+        <div class="agent-card specialist" id="card-CustomerAgent">
+          <div class="agent-avatar">👥</div>
+          <div class="agent-meta">
+            <h3>Customer Behavior</h3>
+            <span class="role-badge">Conversion Specialist</span>
+            <div class="status-indicator">
+              <span class="dot"></span> <span class="status-text">IDLE</span>
+            </div>
+            <p class="current-task">Listening to user sessions...</p>
+          </div>
+        </div>
+
+        <!-- Inventory Specialist -->
+        <div class="agent-card specialist" id="card-InventoryAgent">
+          <div class="agent-avatar">📦</div>
+          <div class="agent-meta">
+            <h3>Inventory & Operations</h3>
+            <span class="role-badge">Supply Chain Specialist</span>
+            <div class="status-indicator">
+              <span class="dot"></span> <span class="status-text">IDLE</span>
+            </div>
+            <p class="current-task">Auditing warehouse buffers...</p>
+          </div>
+        </div>
+
+        <!-- Marketing Specialist -->
+        <div class="agent-card specialist" id="card-MarketingAgent">
+          <div class="agent-avatar">📢</div>
+          <div class="agent-meta">
+            <h3>Marketing & Campaign</h3>
+            <span class="role-badge">Growth Specialist</span>
+            <div class="status-indicator">
+              <span class="dot"></span> <span class="status-text">IDLE</span>
+            </div>
+            <p class="current-task">Evaluating CAC & ROAS stats...</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- Main Operational Split Workspace -->
+      <main class="dashboard-workspace">
+        
+        <!-- Left: Interactive Chat Console -->
+        <div class="workspace-panel chat-console">
+          <div class="panel-header">
+            <h2>💬 Conversational Analytics Sandbox</h2>
+            <div class="gemini-key-container">
+              <input type="password" id="gemini-api-key" placeholder="Enter Gemini API Key (Optional)..." />
+            </div>
+          </div>
+          <div class="chat-messages" id="chat-messages-container">
+            <!-- Simulated greeting -->
+            <div class="message system-msg">
+              <span class="msg-timestamp">System</span>
+              <p>Welcome, Operator. Select a scenario above or query the lead orchestrator directly to initiate investigations. You can use the buttons below for fast analysis:</p>
+              <div class="prompt-chips">
+                <button class="prompt-chip" data-prompt="Why did sales drop yesterday?">🔍 Why did sales drop yesterday?</button>
+                <button class="prompt-chip" data-prompt="Are conversion rates healthy today?">📱 Are conversion rates healthy today?</button>
+                <button class="prompt-chip" data-prompt="How is our latest email campaign performing?">✉️ How is our latest email campaign performing?</button>
+                <button class="prompt-chip" data-prompt="Draft a full store health report">📋 Draft store health report</button>
+              </div>
+            </div>
+          </div>
+          <form class="chat-input-area" id="chat-form">
+            <input type="text" id="chat-input-text" autocomplete="off" placeholder="Ask Orchestrator: e.g., 'Check headphones stock levels'..." required />
+            <button type="submit" class="btn btn-primary" id="chat-send-btn">Send Prompt</button>
+          </form>
+        </div>
+
+        <!-- Right: Visualization Workspace -->
+        <div class="workspace-panel analytics-panel">
+          <div class="panel-header">
+            <h2>📊 Real-Time Operations Charts</h2>
+            <div class="tab-selectors">
+              <button class="tab-btn active" data-tab="tab-revenue">Sales Trends</button>
+              <button class="tab-btn" data-tab="tab-funnel">Conversion Funnel</button>
+              <button class="tab-btn" data-tab="tab-inventory">Inventory Buffer</button>
+              <button class="tab-btn" data-tab="tab-marketing">Campaign ROAS</button>
+            </div>
+          </div>
+          
+          <div class="chart-viewport">
+            <!-- Sales Tab -->
+            <div class="tab-content active" id="tab-revenue">
+              <div class="chart-container">
+                <canvas id="revenue-chart"></canvas>
+              </div>
+              <div class="chart-stats-summary" id="revenue-stats">
+                <!-- Calculated dynamically -->
+              </div>
+            </div>
+            
+            <!-- Funnel Tab -->
+            <div class="tab-content" id="tab-funnel">
+              <div class="chart-container">
+                <canvas id="funnel-chart"></canvas>
+              </div>
+              <div class="chart-stats-summary" id="funnel-stats">
+                <!-- Calculated dynamically -->
+              </div>
+            </div>
+            
+            <!-- Inventory Tab -->
+            <div class="tab-content" id="tab-inventory">
+              <div class="chart-container">
+                <canvas id="inventory-chart"></canvas>
+              </div>
+              <div class="chart-stats-summary" id="inventory-stats">
+                <!-- Calculated dynamically -->
+              </div>
+            </div>
+            
+            <!-- Marketing Tab -->
+            <div class="tab-content" id="tab-marketing">
+              <div class="chart-container">
+                <canvas id="marketing-chart"></canvas>
+              </div>
+              <div class="chart-stats-summary" id="marketing-stats">
+                <!-- Calculated dynamically -->
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </main>
+
+      <!-- Bottom Telemetry & Recommendations Area -->
+      <footer class="telemetry-bar">
+        
+        <!-- Log: Agent Communication Dialogue Feed -->
+        <div class="telemetry-panel terminal-feed">
+          <div class="panel-header font-outfit">
+            <span>📟 Autonomous Dialogue Terminal</span>
+            <button id="clear-terminal-btn" class="btn-icon">Clear Logs</button>
+          </div>
+          <div class="terminal-logs" id="terminal-logs-container">
+            <div class="terminal-row sys">[SYSTEM INITIALIZATION]: Core message broker online. 5 Agents registered in cluster. Awaiting inputs.</div>
+          </div>
+        </div>
+
+        <!-- Sandbox: Relational Database Viewer -->
+        <div class="telemetry-panel database-viewer">
+          <div class="panel-header font-outfit">
+            <span>💾 DB Sandbox Inspector</span>
+            <select id="db-table-select" class="table-mini-select">
+              <option value="products">Inventory Table</option>
+              <option value="campaigns">Campaigns Table</option>
+              <option value="orders">Orders (Recent)</option>
+              <option value="sessions">Sessions (Recent)</option>
+            </select>
+          </div>
+          <div class="database-table-wrapper" id="database-table-container">
+            <!-- Renders dynamically -->
+          </div>
+        </div>
+
+        <!-- Board: Action & Recommendations Dispatcher -->
+        <div class="telemetry-panel recommendations-panel">
+          <div class="panel-header font-outfit">
+            <span>🎯 Action Recommendation Board</span>
+          </div>
+          <div class="recommendations-list" id="recommendations-container">
+            <div class="rec-empty-state">
+              No recommendations generated yet. Query the agent system to see recommended operational actions.
+            </div>
+          </div>
+        </div>
+
+      </footer>
+
+    </div>
+    
+    <script type="module" src="/src/main.js"></script>
+  </body>
+</html>
